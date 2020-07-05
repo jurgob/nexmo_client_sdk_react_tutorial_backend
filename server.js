@@ -33,12 +33,28 @@ function createApp(config) {
   const nccoHandler = (req, res) => {
     const { to = 'unknown', from = 'unknown', dtmf = -1 } = req.query;
 
-    const ncco = [
+    let ncco = [
       {
         "action": "talk",
         "text": `Hello There, your number is ${to.split("").join("  ")} and you are colling ${from.split("").join(" ")}`
       }
     ]
+
+    const toSplitted = to.split('__')
+    if(toSplitted[0] === 'ncco'){
+      if(toSplitted[1] === 'talk'){
+        ncco = [
+          {
+            "action": "talk",
+            "text": toSplitted[2]
+          }
+        ]
+      }
+    }
+
+
+
+    logger.info({ ncco }, "NCCO Logger:: ")
 
     return res.json(ncco)
 
