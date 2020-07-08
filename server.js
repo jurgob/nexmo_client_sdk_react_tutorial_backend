@@ -31,7 +31,7 @@ function createApp(config) {
 
 
   const nccoHandler = (req, res) => {
-    const { to = 'unknown', from = 'unknown', dtmf = -1 } = req.query;
+    const { to = 'unknown', from = 'unknown',from_user, dtmf = -1 } = req.query;
 
     let ncco = [
       {
@@ -39,8 +39,8 @@ function createApp(config) {
         "text": `Hello There, your number is ${to.split("").join("  ")} and you are colling ${from.split("").join(" ")}`
       }
     ]
-
     const toSplitted = to.split('__')
+    
     if(toSplitted[0] === 'ncco'){
       if(toSplitted[1] === 'talk'){
         ncco = [
@@ -50,7 +50,22 @@ function createApp(config) {
           }
         ]
       }
+    } else if(from_user) {
+      ncco = [
+            {
+              "action": "connect",
+              "from":`${from_user}`,
+              "endpoint": [
+                {
+                  "type": "app",
+                  "user": `${to}`
+                }
+              ]
+            }
+          ]
     }
+
+    
 
 
 
